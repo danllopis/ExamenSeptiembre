@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <title>Muving Málaga</title>
+</h:head>
+
+<h:body>
+<h:form>
+	<h:dataTable value="#{bean.listadoMotos}" var="moto" border="3" id="tablaMotos">
+	<h:column>
+		<f:facet name="header">ID Moto</f:facet>
+		Moto #{moto.getID()}
+	</h:column>
+	<h:column>
+		<f:facet name="header">Estado Moto</f:facet>
+		#{moto.estado}
+	</h:column>
+	<h:column>
+		<f:facet name="header">Localización</f:facet>
+		<h:outputText value="#{moto.getLocalizacion()}"/>
+	</h:column>
+	<h:column>
+		<f:facet name="header">Destino</f:facet>
+		<h:outputText value="#{moto.getDestino()}"/>
+	</h:column>
+	<h:column>
+		<f:facet name="header">Ocupantes</f:facet>
+		<h:outputText value="#{moto.getOcupantes()}"/>
+	</h:column>
+	<h:column>
+		<f:facet name="header">Plazas Disponibles</f:facet>
+		<h:outputText value="#{moto.getPlazas()}"/>
+	</h:column>
+	<h:column>
+		<f:facet name="header">Mapa</f:facet>
+		<h:commandLink value="Ver Mapa" action="#{bean.verMapa(moto)}"/>
+	</h:column>
+	<h:column>
+		<f:facet name="header">Reservar Entera</f:facet>
+		<ui:fragment rendered="#{bean.estadoDisponible(moto)}">
+			<h:commandButton value="Reservar" action="#{bean.reservarMoto(moto)}"/>
+		</ui:fragment>
+		<ui:fragment rendered="#{bean.estadoOcupada(moto)}">
+			<h:commandButton value="Liberar" action="#{bean.liberarMoto(moto)}"/>
+		</ui:fragment>
+	</h:column>
+	<h:column>
+		<f:facet name="header">Reservar Plaza</f:facet>
+		<ui:fragment rendered="#{bean.plazasDisponibles(moto) == 0}">
+			COMPLETO
+		</ui:fragment>
+		<ui:fragment rendered="#{bean.plazasDisponibles(moto) != 0}">
+			<h:commandButton value="Reservar Plaza" action="#{bean.reservarPlaza(moto)}"/>
+		</ui:fragment>
+	</h:column>
+	
+	<h:column>
+	<f:facet name="header">
+	Devolver 1 plaza
+	</f:facet>
+	<ui:fragment rendered="#{bean.menorPlazasTotales(moto)}">
+	<h:commandButton action="#{bean.devolverUnaPlaza(moto)}" value="Devolver"/>
+	</ui:fragment>
+	<ui:fragment rendered="#{bean.menorPlazasTotales(moto)==false}">
+	Sin ocupantes
+	</ui:fragment>
+	</h:column>
+	
+	<h:column>
+		<f:facet name="header"/>
+		<h:commandButton value="Eliminar" action="#{bean.eliminarMoto(moto)}"></h:commandButton>
+	</h:column>
+	<h:column>
+		<f:facet name="header"/>
+		<h:commandLink value="Mapa Trayecto" action="#{bean.mapaDireccion(moto)}"/>
+	</h:column>
+	<h:column>
+		<f:facet name="header"/>
+		<h:commandButton value="Editar Moto" action="#{bean.editarMoto(moto)}"/>
+	</h:column>
+	</h:dataTable>
+	<h:commandButton value="Nueva Moto" action="#{bean.nuevaMoto()}"/>
+	</h:form>
+</h:body>
+</html>
